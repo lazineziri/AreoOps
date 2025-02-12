@@ -1,6 +1,7 @@
 import { Suspense } from "react";
-import { useRoutes, Routes, Route } from "react-router-dom";
+import { useRoutes, Routes, Route, Navigate } from "react-router-dom";
 import routes from "tempo-routes";
+import { TenantProvider } from "@/components/TenantProvider";
 
 // Module imports
 import Home from "./components/home";
@@ -40,69 +41,71 @@ import PricingPolicyPage from "./pages/pricing/policy";
 
 function App() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <p>Loading...</p>
+    <TenantProvider>
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <p>Loading...</p>
+          </div>
+        }
+      >
+        <div className="min-h-screen">
+          <Routes>
+            {/* Home */}
+            <Route path="/" element={<Home />} />
+
+            {/* Aircraft Module */}
+            <Route path="/aircraft-seatmap" element={<AircraftSeatmapPage />} />
+            <Route path="/aircraft" element={<AircraftPage />} />
+            <Route path="/aircraft-layout" element={<AircraftLayoutPage />} />
+
+            {/* Count/Dest Module */}
+            <Route path="/destination" element={<DestinationPage />} />
+            <Route path="/airport" element={<AirportPage />} />
+            <Route path="/utc" element={<UtcZonePage />} />
+            <Route path="/country" element={<CountryPage />} />
+            <Route path="/currency" element={<CurrencyPage />} />
+            <Route path="/daylight" element={<DaylightSavingPage />} />
+            <Route path="/language" element={<LanguagePage />} />
+
+            {/* Cuscon Module */}
+            <Route path="/contract" element={<ContractPage />} />
+            <Route path="/allotment" element={<AllotmentPage />} />
+            <Route path="/cuscon/settings" element={<CusconSettingsPage />} />
+
+            {/* Flight Module */}
+            <Route path="/flight" element={<FlightPage />} />
+            <Route path="/planned-flight" element={<PlannedFlightPage />} />
+            <Route path="/flight/instances" element={<FlightInstancesPage />} />
+            <Route
+              path="/flight/configuration"
+              element={<FlightConfigurationPage />}
+            />
+
+            {/* Ancillary Module */}
+            <Route path="/ancillary" element={<AncillaryPage />} />
+
+            {/* Pricing Module */}
+            <Route path="/pricing/seasons" element={<PricingSeasonsPage />} />
+            <Route path="/pricing/profiles" element={<PricingProfilesPage />} />
+            <Route path="/pricing/classes" element={<PricingClassesPage />} />
+            <Route
+              path="/pricing/seat-reservation"
+              element={<PricingSeatReservationPage />}
+            />
+            <Route
+              path="/pricing/combinations"
+              element={<PricingCombinationsPage />}
+            />
+            <Route path="/pricing/tax" element={<PricingTaxPage />} />
+            <Route path="/pricing/policy" element={<PricingPolicyPage />} />
+          </Routes>
+
+          {/* Tempo routes for development */}
+          {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
         </div>
-      }
-    >
-      <div className="min-h-screen">
-        <Routes>
-          {/* Home */}
-          <Route path="/" element={<Home />} />
-
-          {/* Aircraft Module */}
-          <Route path="/aircraft-seatmap" element={<AircraftSeatmapPage />} />
-          <Route path="/aircraft" element={<AircraftPage />} />
-          <Route path="/aircraft-layout" element={<AircraftLayoutPage />} />
-
-          {/* Count/Dest Module */}
-          <Route path="/destination" element={<DestinationPage />} />
-          <Route path="/airport" element={<AirportPage />} />
-          <Route path="/utc" element={<UtcZonePage />} />
-          <Route path="/country" element={<CountryPage />} />
-          <Route path="/currency" element={<CurrencyPage />} />
-          <Route path="/daylight" element={<DaylightSavingPage />} />
-          <Route path="/language" element={<LanguagePage />} />
-
-          {/* Cuscon Module */}
-          <Route path="/contract" element={<ContractPage />} />
-          <Route path="/allotment" element={<AllotmentPage />} />
-          <Route path="/cuscon/settings" element={<CusconSettingsPage />} />
-
-          {/* Flight Module */}
-          <Route path="/flight" element={<FlightPage />} />
-          <Route path="/planned-flight" element={<PlannedFlightPage />} />
-          <Route path="/flight/instances" element={<FlightInstancesPage />} />
-          <Route
-            path="/flight/configuration"
-            element={<FlightConfigurationPage />}
-          />
-
-          {/* Ancillary Module */}
-          <Route path="/ancillary" element={<AncillaryPage />} />
-
-          {/* Pricing Module */}
-          <Route path="/pricing/seasons" element={<PricingSeasonsPage />} />
-          <Route path="/pricing/profiles" element={<PricingProfilesPage />} />
-          <Route path="/pricing/classes" element={<PricingClassesPage />} />
-          <Route
-            path="/pricing/seat-reservation"
-            element={<PricingSeatReservationPage />}
-          />
-          <Route
-            path="/pricing/combinations"
-            element={<PricingCombinationsPage />}
-          />
-          <Route path="/pricing/tax" element={<PricingTaxPage />} />
-          <Route path="/pricing/policy" element={<PricingPolicyPage />} />
-        </Routes>
-
-        {/* Tempo routes for development */}
-        {import.meta.env.VITE_TEMPO === "true" && useRoutes(routes)}
-      </div>
-    </Suspense>
+      </Suspense>
+    </TenantProvider>
   );
 }
 
